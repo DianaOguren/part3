@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const mongoose = require('mongoose');
 mongoose.set('runValidators', true);
 let uniqueValidator = require('mongoose-unique-validator');
@@ -21,9 +22,16 @@ const personSchema = new mongoose.Schema({
         type: String, 
         required: true,
         minLength: 3, 
-        unique: true},
+        unique: true
+      },
     number: {
         type: String,
+        validate: {
+          validator: function(v) {
+            return /\b[0-9]{2,3}-\b[0-9]{7,8}/.test(v);
+          },
+          message: props => `${props.value} is not a valid phone number!`
+        },
         minLength: 8,
         required: true
       },
